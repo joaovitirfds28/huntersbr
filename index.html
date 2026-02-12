@@ -374,7 +374,7 @@
                     const response = await fetch(API_URL + '/latest', {headers: {'X-Master-Key': API_KEY}});
                     const data = await response.json();
                     const config = data.record.config;
-                    if (config && config.members) {
+                    if (config && config.members && config.members.length > 0) {
                         const grid = document.getElementById('membersGrid');
                         grid.innerHTML = '';
                         config.members.forEach(m => {
@@ -387,7 +387,7 @@
                         });
                     }
                 } catch(e) {
-                    console.log('Config not loaded:', e);
+                    console.log('Using default members');
                 }
             }
             loadSiteConfig();
