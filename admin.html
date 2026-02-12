@@ -772,8 +772,19 @@ const name = document.getElementById(`m${i}_name`)?.value;
 if (name) members.push({emoji, name, role: document.getElementById(`m${i}_role`).value, level: document.getElementById(`m${i}_level`).value, fruit: document.getElementById(`m${i}_fruit`).value, bounty: document.getElementById(`m${i}_bounty`).value});
 }
 const config = {discord: document.getElementById('discordLink').value, maxAge: document.getElementById('maxAge').value, minLevel: document.getElementById('minLevel').value, minBounty: document.getElementById('minBounty').value, members};
-await updateCloud('config', config);
+try {
+const current = await fetch(API_URL + '/latest', {headers: {'X-Master-Key': API_KEY}}).then(r => r.json());
+const updated = {...current.record};
+updated.config = config;
+await fetch(API_URL, {
+method: 'PUT',
+headers: {'Content-Type': 'application/json', 'X-Master-Key': API_KEY},
+body: JSON.stringify(updated)
+});
 alert('✓ CONFIG SAVED!\n\nReload the main site to see changes.');
+} catch(e) {
+alert('✕ ERROR: ' + e.message);
+}
 }
 </script>
 </body>
