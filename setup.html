@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Salvando configuração...</title>
+</head>
+<body>
+<h1>Salvando membros padrão...</h1>
+<p id="status">Aguarde...</p>
+<script>
+const API_URL = 'https://api.jsonbin.io/v3/b/698ca2ffae596e708f22e412';
+const API_KEY = '$2a$10$ITOLt7Stf9SumPbSWRyzJuQJvakKvdDZc3xNDl/rW4KsmCd4/36lK';
+
+async function saveDefault() {
+try {
+const response = await fetch(API_URL + '/latest', {headers: {'X-Master-Key': API_KEY}});
+const data = await response.json();
+const updated = {...data.record};
+updated.config = {
+discord: 'https://discord.gg/yPEbZxYwan',
+maxAge: 13,
+minLevel: 2400,
+minBounty: '2.5M',
+members: [
+{name: 'Luan', emoji: '🔥', role: 'Capitão', level: 2800, fruit: 'T-Rex', bounty: '4M'},
+{name: 'João', emoji: '⚡', role: 'Vice-Capitão', level: 2800, fruit: 'Phoenix', bounty: '8.4M'},
+{name: 'Gordox', emoji: '💀', role: 'Comandante', level: 2800, fruit: 'Corte', bounty: '4.2M'},
+{name: 'MG', emoji: '🗡️', role: 'Comandante', level: 2800, fruit: 'Yeti', bounty: '2.5M'}
+]
+};
+await fetch(API_URL, {
+method: 'PUT',
+headers: {'Content-Type': 'application/json', 'X-Master-Key': API_KEY},
+body: JSON.stringify(updated)
+});
+document.getElementById('status').innerHTML = '✅ SALVO! Feche esta aba e recarregue o index.html';
+} catch(e) {
+document.getElementById('status').innerHTML = '❌ ERRO: ' + e.message;
+}
+}
+saveDefault();
+</script>
+</body>
+</html>

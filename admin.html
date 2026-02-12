@@ -719,7 +719,17 @@ updateSyncStatus('✓ TEST OK');
 }
 
 async function loadEditor() {
-const config = await getFromCloud('config') || {discord: 'https://discord.gg/yPEbZxYwan', maxAge: 13, minLevel: 2400, minBounty: '2.5M', members: [{name: 'Luan', emoji: '🔥', role: 'Capitão', level: 2800, fruit: 'T-Rex', bounty: '4M'}, {name: 'João', emoji: '⚡', role: 'Vice-Capitão', level: 2800, fruit: 'Phoenix', bounty: '8.4M'}, {name: 'Gordox', emoji: '💀', role: 'Comandante', level: 2800, fruit: 'Corte', bounty: '4.2M'}, {name: 'MG', emoji: '🗡️', role: 'Comandante', level: 2800, fruit: 'Yeti', bounty: '2.5M'}]};
+let config = null;
+try {
+const response = await fetch(API_URL + '/latest', {headers: {'X-Master-Key': API_KEY}});
+const data = await response.json();
+config = data.record.config;
+} catch(e) {
+console.log('No config found');
+}
+if (!config || !config.members) {
+config = {discord: 'https://discord.gg/yPEbZxYwan', maxAge: 13, minLevel: 2400, minBounty: '2.5M', members: [{name: 'Luan', emoji: '🔥', role: 'Capitão', level: 2800, fruit: 'T-Rex', bounty: '4M'}, {name: 'João', emoji: '⚡', role: 'Vice-Capitão', level: 2800, fruit: 'Phoenix', bounty: '8.4M'}, {name: 'Gordox', emoji: '💀', role: 'Comandante', level: 2800, fruit: 'Corte', bounty: '4.2M'}, {name: 'MG', emoji: '🗡️', role: 'Comandante', level: 2800, fruit: 'Yeti', bounty: '2.5M'}]};
+}
 document.getElementById('discordLink').value = config.discord;
 document.getElementById('maxAge').value = config.maxAge;
 document.getElementById('minLevel').value = config.minLevel;
