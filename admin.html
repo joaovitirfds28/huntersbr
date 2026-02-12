@@ -396,6 +396,7 @@ box-shadow: 0 0 10px #0f0;
 <div id="editorTab" class="tab-content">
 <div class="card">
 <h2 style="color: #0f0; margin-bottom: 20px;">✎ SITE EDITOR</h2>
+<button onclick="loadDefaultMembers()" style="background: #00a; color: #fff; margin: 10px;">↻ LOAD DEFAULT MEMBERS</button>
 <h3 style="color: #0f0; margin: 20px 0 10px 0;">DISCORD LINK</h3>
 <input type="text" id="discordLink" placeholder="https://discord.gg/...">
 <h3 style="color: #0f0; margin: 20px 0 10px 0;">REQUIREMENTS</h3>
@@ -716,6 +717,36 @@ const messages = await getFromCloud('messages');
 const recruits = await getFromCloud('recruits');
 alert(`✓ SYNC OK\n\nMESSAGES: ${messages.length}\nRECRUITS: ${recruits.length}`);
 updateSyncStatus('✓ TEST OK');
+}
+
+function loadDefaultMembers() {
+const defaultMembers = [
+{name: 'Luan', emoji: '🔥', role: 'Capitão', level: 2800, fruit: 'T-Rex', bounty: '4M'},
+{name: 'João', emoji: '⚡', role: 'Vice-Capitão', level: 2800, fruit: 'Phoenix', bounty: '8.4M'},
+{name: 'Gordox', emoji: '💀', role: 'Comandante', level: 2800, fruit: 'Corte', bounty: '4.2M'},
+{name: 'MG', emoji: '🗡️', role: 'Comandante', level: 2800, fruit: 'Yeti', bounty: '2.5M'}
+];
+document.getElementById('discordLink').value = 'https://discord.gg/yPEbZxYwan';
+document.getElementById('maxAge').value = 13;
+document.getElementById('minLevel').value = 2400;
+document.getElementById('minBounty').value = '2.5M';
+const membersDiv = document.getElementById('membersEditor');
+membersDiv.innerHTML = '';
+defaultMembers.forEach((m, i) => {
+const div = document.createElement('div');
+div.style.cssText = 'background: rgba(0,0,0,0.5); padding: 15px; border: 1px solid #0f0; margin: 10px 0;';
+div.innerHTML = `
+<input type="text" id="m${i}_emoji" value="${m.emoji}" placeholder="Emoji" style="width: 60px;">
+<input type="text" id="m${i}_name" value="${m.name}" placeholder="Name">
+<input type="text" id="m${i}_role" value="${m.role}" placeholder="Role">
+<input type="number" id="m${i}_level" value="${m.level}" placeholder="Level" style="width: 100px;">
+<input type="text" id="m${i}_fruit" value="${m.fruit}" placeholder="Fruit">
+<input type="text" id="m${i}_bounty" value="${m.bounty}" placeholder="Bounty" style="width: 100px;">
+<button onclick="removeMember(${i})" style="background: #a00; color: #fff; padding: 8px 15px;">✕</button>
+`;
+membersDiv.appendChild(div);
+});
+alert('✓ DEFAULT MEMBERS LOADED!\n\nNow click SAVE ALL');
 }
 
 async function loadEditor() {
