@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste JSONBin</title>
+</head>
+<body>
+    <h1>Teste de Conexão JSONBin</h1>
+    <button onclick="testar()">Testar Conexão</button>
+    <button onclick="enviarMensagem()">Enviar Mensagem Teste</button>
+    <button onclick="verDados()">Ver Dados</button>
+    <pre id="resultado"></pre>
+
+    <script>
+        const API_URL = 'https://api.jsonbin.io/v3/b/698ca2ffae596e708f22e412';
+        const API_KEY = '$2a$10$ITOLt7Stf9SumPbSWRyzJuQJvakKvdDZc3xNDl/rW4KsmCd4/36lK';
+
+        async function testar() {
+            try {
+                const response = await fetch(API_URL + '/latest', {
+                    headers: {'X-Master-Key': API_KEY}
+                });
+                const data = await response.json();
+                document.getElementById('resultado').textContent = JSON.stringify(data, null, 2);
+            } catch(e) {
+                document.getElementById('resultado').textContent = 'ERRO: ' + e.message;
+            }
+        }
+
+        async function enviarMensagem() {
+            try {
+                const response = await fetch(API_URL + '/latest', {headers: {'X-Master-Key': API_KEY}});
+                const current = await response.json();
+                
+                const messages = current.record.messages || [];
+                messages.push({
+                    id: Date.now(),
+                    name: 'Teste',
+                    email: 'teste@teste.com',
+                    msg: 'Mensagem de teste',
+                    date: new Date().toLocaleString('pt-BR'),
+                    status: 'pending'
+                });
+
+                await fetch(API_URL, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json', 'X-Master-Key': API_KEY},
+                    body: JSON.stringify({messages, recruits: current.record.recruits || []})
+                });
+
+                alert('Mensagem enviada!');
+                verDados();
+            } catch(e) {
+                alert('ERRO: ' + e.message);
+            }
+        }
+
+        async function verDados() {
+            try {
+                const response = await fetch(API_URL + '/latest', {headers: {'X-Master-Key': API_KEY}});
+                const data = await response.json();
+                document.getElementById('resultado').textContent = JSON.stringify(data.record, null, 2);
+            } catch(e) {
+                document.getElementById('resultado').textContent = 'ERRO: ' + e.message;
+            }
+        }
+    </script>
+</body>
+</html>
