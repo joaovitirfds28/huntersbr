@@ -209,7 +209,7 @@
 
         <div class="section">
             <h2>👥 Membros Principais</h2>
-            <div class="members-grid">
+            <div class="members-grid" id="membersGrid">
                 <div class="member-card">
                     <div class="member-name">🔥 Luan</div>
                     <div class="member-role">Capitão</div>
@@ -368,6 +368,29 @@
                     return JSON.parse(localStorage.getItem('huntersBR_' + type) || '[]');
                 }
             }
+            
+            async function loadSiteConfig() {
+                try {
+                    const response = await fetch(API_URL + '/latest', {headers: {'X-Master-Key': API_KEY}});
+                    const data = await response.json();
+                    const config = data.record.config;
+                    if (config && config.members) {
+                        const grid = document.getElementById('membersGrid');
+                        grid.innerHTML = '';
+                        config.members.forEach(m => {
+                            grid.innerHTML += `
+                            <div class="member-card">
+                                <div class="member-name">${m.emoji} ${m.name}</div>
+                                <div class="member-role">${m.role}</div>
+                                <div class="member-level">Level ${m.level} | ${m.fruit}<br>Bounty ${m.bounty}</div>
+                            </div>`;
+                        });
+                    }
+                } catch(e) {
+                    console.log('Config not loaded:', e);
+                }
+            }
+            loadSiteConfig();
         </script>
         <script>
             let photoValidated = false;
